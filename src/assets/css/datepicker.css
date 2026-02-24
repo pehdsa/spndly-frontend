@@ -1,0 +1,138 @@
+/* VueDatePicker Custom Styles */
+
+/* Light mode overrides */
+.dp__theme_light {
+  /* Typography */
+  --dp-font-family: var(--font-inter, system-ui, sans-serif);
+  --dp-font-size: 0.875rem;
+  --dp-preview-font-size: 0.75rem;
+  --dp-time-font-size: 1.5rem;
+
+  /* Border radius - match shadcn rounded-md (0.375rem = 6px) */
+  --dp-border-radius: var(--radius-lg);
+  --dp-cell-border-radius: 0.25rem;
+
+  /* Input sizing - h-9 (36px) to match shadcn inputs */
+  --dp-input-padding: 0.425rem 0.75rem;
+  --dp-input-icon-padding: 2.25rem;
+
+  /* Menu sizing */
+  --dp-menu-min-width: 260px;
+  --dp-cell-size: 35px;
+
+  /* Colors */
+  --dp-background-color: var(--background);
+  --dp-text-color: var(--foreground);
+  --dp-hover-color: var(--accent);
+  --dp-hover-text-color: var(--accent-foreground);
+  --dp-hover-icon-color: var(--foreground);
+  --dp-primary-color: var(--primary);
+  --dp-primary-disabled-color: color-mix(in oklch, var(--primary), transparent 50%);
+  --dp-primary-text-color: var(--primary-foreground);
+  --dp-secondary-color: var(--secondary);
+  --dp-border-color: var(--border);
+  --dp-menu-border-color: var(--border);
+  --dp-border-color-hover: var(--border);
+  --dp-border-color-focus: var(--ring);
+  --dp-disabled-color: var(--muted);
+  --dp-disabled-color-text: var(--muted-foreground);
+  --dp-scroll-bar-background: var(--muted);
+  --dp-scroll-bar-color: var(--muted-foreground);
+  --dp-success-color: var(--primary);
+  --dp-success-color-disabled: color-mix(in oklch, var(--primary), transparent 50%);
+  --dp-icon-color: var(--muted-foreground);
+  --dp-danger-color: var(--destructive);
+  --dp-marker-color: var(--primary);
+  --dp-tooltip-color: var(--popover);
+  --dp-highlight-color: color-mix(in oklch, var(--primary), transparent 90%);
+  --dp-range-between-dates-background-color: color-mix(in oklch, var(--primary), transparent 90%);
+  --dp-range-between-dates-text-color: var(--foreground);
+  --dp-range-between-border-color: color-mix(in oklch, var(--primary), transparent 90%);
+}
+
+/* Dark mode overrides */
+.dp__theme_dark {
+  /* Typography */
+  --dp-font-family: var(--font-inter, system-ui, sans-serif);
+  --dp-font-size: 0.875rem;
+  --dp-preview-font-size: 0.75rem;
+  --dp-time-font-size: 1.5rem;
+
+  /* Border radius - match shadcn rounded-md (0.375rem = 6px) */
+  --dp-border-radius: var(--radius-lg);
+  --dp-cell-border-radius: 0.25rem;
+
+  /* Input sizing - h-9 (36px) to match shadcn inputs */
+  --dp-input-padding: 0.422rem 0.75rem;
+  --dp-input-icon-padding: 2.25rem;
+
+  /* Menu sizing */
+  --dp-menu-min-width: 260px;
+  --dp-cell-size: 35px;
+
+  /* Colors - match shadcn dark mode inputs (dark:bg-input/30, border-input) */
+  --dp-background-color: color-mix(in oklab, var(--input) 30%, transparent);
+  --dp-text-color: var(--foreground);
+  --dp-hover-color: var(--accent);
+  --dp-hover-text-color: var(--accent-foreground);
+  --dp-hover-icon-color: var(--foreground);
+  --dp-primary-color: var(--primary);
+  --dp-primary-disabled-color: color-mix(in oklch, var(--primary), transparent 50%);
+  --dp-primary-text-color: var(--primary-foreground);
+  --dp-secondary-color: var(--secondary);
+  --dp-border-color: var(--input);
+  --dp-menu-border-color: var(--input);
+  --dp-border-color-hover: var(--input);
+  --dp-border-color-focus: var(--ring);
+  --dp-disabled-color: var(--muted);
+  --dp-disabled-color-text: var(--muted-foreground);
+  --dp-scroll-bar-background: var(--muted);
+  --dp-scroll-bar-color: var(--muted-foreground);
+  --dp-success-color: var(--primary);
+  --dp-success-color-disabled: color-mix(in oklch, var(--primary), transparent 50%);
+  --dp-icon-color: var(--muted-foreground);
+  --dp-danger-color: var(--destructive);
+  --dp-marker-color: var(--primary);
+  --dp-tooltip-color: var(--popover);
+  --dp-highlight-color: color-mix(in oklch, var(--primary), transparent 90%);
+  --dp-range-between-dates-background-color: color-mix(in oklch, var(--primary), transparent 90%);
+  --dp-range-between-dates-text-color: var(--foreground);
+  --dp-range-between-border-color: color-mix(in oklch, var(--primary), transparent 90%);
+}
+
+/* Dark mode calendar menu - solid background for teleported menu */
+.dp__theme_dark.dp__menu {
+  background-color: oklch(0.205 0 0) !important;
+  border-color: oklch(1 0 0 / 15%) !important;
+}
+
+/* Dark mode time picker overlay - solid background */
+.dp__theme_dark .dp__time_display,
+.dp__theme_dark .dp__time_col,
+.dp__theme_dark .dp__overlay,
+.dp__theme_dark .dp__overlay_container,
+.dp__theme_dark .dp__overlay_row,
+.dp__theme_dark .dp__overlay_cell_active,
+.dp__theme_dark .dp__button,
+.dp__theme_dark .dp__action_row {
+  background-color: oklch(0.205 0 0) !important;
+}
+
+.dp__theme_dark .dp__cell_inner {
+  border-color: var(--background) !important;
+}
+
+/* Disabled state - match shadcn input (opacity-50, cursor-not-allowed) */
+.dp__disabled {
+  opacity: 0.5;
+}
+
+/* Error state */
+.dp-input-error.dp__input {
+  border-color: var(--destructive);
+  color: var(--destructive);
+}
+
+.dp-input-error.dp__input::placeholder {
+  color: var(--destructive);
+}
