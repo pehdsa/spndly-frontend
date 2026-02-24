@@ -1,0 +1,5 @@
+export { default as Header } from './Header.vue'
+export { default as HeaderSearch } from './HeaderSearch.vue'
+export { default as HeaderNotifications } from './HeaderNotifications.vue'
+export { default as HeaderLanguage } from './HeaderLanguage.vue'
+export { default as HeaderUserDropdown } from './HeaderUserDropdown.vue'
