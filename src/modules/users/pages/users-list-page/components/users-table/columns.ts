@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { AppDataTableColumnHeader, AppTableCell } from '@/components/shared/app-datatable'
 import type { User, UserStatus, UserRole } from '@/services/users'
 import { USER_ROLE_LABELS } from '@/modules/users/constants'
+import { useAuthStore } from '@/stores/auth'
 import UserActions from './UserActions.vue'
 
 export const columns: ColumnDef<User>[] = [
@@ -58,6 +59,11 @@ export const columns: ColumnDef<User>[] = [
   {
     id: 'actions',
     header: () => h('div', { class: 'text-center' }, 'Ações'),
-    cell: ({ row }) => h('div', { class: "flex justify-center items-center" }, h(UserActions, { user: row.original })),
+    cell: ({ row }) => {
+      const authStore = useAuthStore()
+      const isCurrentUser = row.original.id === authStore.user?.id
+      if (isCurrentUser) return h('div', { class: 'flex justify-center items-center text-muted-foreground' }, '-')
+      return h('div', { class: "flex justify-center items-center" }, h(UserActions, { user: row.original }))
+    },
   },
 ]
