@@ -9,7 +9,7 @@ export function useCreateInvitation() {
   return useMutation({
     mutationFn: (data: CreateBulkInvitationData) => createInvitation(data),
     onSuccess: (response: BulkInvitationResponse) => {
-      if (response.summary.total_created > 0) {
+      if (response.sent.length > 0) {
         queryClient.invalidateQueries({ queryKey: userKeys.invitationsAll() })
       }
     },
