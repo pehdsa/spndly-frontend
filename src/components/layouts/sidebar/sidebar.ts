@@ -1,4 +1,5 @@
 import {
+  LayoutDashboard,
   Users,
   type LucideIcon,
 } from 'lucide-vue-next'
@@ -24,6 +25,16 @@ export interface NavSection {
 }
 
 export const navigation: NavSection[] = [
+  {
+    label: 'Geral',
+    items: [
+      {
+        title: 'Dashboard',
+        icon: LayoutDashboard,
+        to: '/dashboard',
+      },
+    ],
+  },
   {
     label: 'Gerenciamento',
     items: [

@@ -37,7 +37,7 @@ export const requiresAdmin: NavigationGuard = (_to, _from, next) => {
   const authStore = useAuthStore()
 
   if (!authStore.isAdmin) {
-    next({ name: 'not-found' })
+    next({ name: 'dashboard' })
   } else {
     next()
   }

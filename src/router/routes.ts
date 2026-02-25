@@ -1,6 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 import { authRoutes } from '@/modules/auth/router'
+import { dashboardRoutes } from '@/modules/dashboard'
 import { usersRoutes } from '@/modules/users'
 
 // Rotas protegidas (layout auth)
@@ -13,8 +14,9 @@ const protectedRoutes: RouteRecordRaw = {
   children: [
     {
       path: '',
-      redirect: '/users',
+      redirect: { name: 'dashboard' },
     },
+    dashboardRoutes,
     usersRoutes,
   ],
 }
