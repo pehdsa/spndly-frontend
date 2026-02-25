@@ -54,7 +54,7 @@ const filteredNavigation = computed(() => {
   <AppSidebarSkeleton v-if="authStore.isLoadingUser" />
 
   <!-- Sidebar real quando user está validado -->
-  <Sidebar v-else :variant="sidebarVariant" :collapsible="sidebarCollapsible">
+  <Sidebar class="h-full" v-else :variant="sidebarVariant" :collapsible="sidebarCollapsible">
     <SidebarHeader>
       <SidebarMenu>
         <SidebarMenuItem>

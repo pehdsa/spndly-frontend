@@ -8,7 +8,7 @@ const authStore = useAuthStore()
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col">
+  <div class="flex min-h-svh flex-col">
     <SidebarProvider
       :default-open="authStore.isClient ? false : true"
       class="flex-1"
