@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useForm } from '@/composables/useForm'
+import { useErrorHandler } from '@/composables'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AppFormInput } from '@/components/shared/app-form-input'
 import { useForgotPassword } from '@/services/auth'
 import { forgotPasswordSchema, type ForgotPasswordInput } from '../schemas/auth.schema'
 
+const { showSuccessToast, watchError } = useErrorHandler()
+
 const { mutate: forgotPassword, isPending, error, isSuccess } = useForgotPassword()
+
+watchError(error)
 
 const form = useForm({
   defaultValues: {
@@ -17,15 +21,12 @@ const form = useForm({
     onSubmit: forgotPasswordSchema,
   },
   onSubmit: async ({ value }) => {
-    forgotPassword(value)
+    forgotPassword(value, {
+      onSuccess: () => {
+        showSuccessToast('Email enviado', 'Verifique sua caixa de entrada para redefinir sua senha.')
+      },
+    })
   },
-})
-
-const errorMessage = computed(() => {
-  if (error.value) {
-    return 'Erro ao enviar email. Verifique o endereço e tente novamente.'
-  }
-  return null
 })
 </script>
 
@@ -43,16 +44,6 @@ const errorMessage = computed(() => {
       <CardContent>
         <form @submit.prevent.stop="form.handleSubmit">
           <div class="flex flex-col gap-6">
-            <!-- Success Message -->
-            <div v-if="isSuccess" class="rounded-md bg-green-50 p-3 text-sm text-green-700">
-              Email enviado com sucesso! Verifique sua caixa de entrada.
-            </div>
-
-            <!-- Error Message -->
-            <div v-if="errorMessage" class="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              {{ errorMessage }}
-            </div>
-
             <!-- Email Field -->
             <form.Field name="email">
               <template #default="{ field }">

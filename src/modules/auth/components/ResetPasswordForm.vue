@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useForm } from '@/composables/useForm'
+import { useErrorHandler } from '@/composables'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AppFormInput } from '@/components/shared/app-form-input'
@@ -10,7 +11,12 @@ import { resetPasswordSchema, type ResetPasswordInput } from '../schemas/auth.sc
 
 const route = useRoute()
 const router = useRouter()
-const { mutate: resetPassword, isPending, error, isSuccess } = useResetPassword()
+const { showSuccessToast, watchError } = useErrorHandler()
+
+const { mutate: resetPassword, isPending, error } = useResetPassword()
+const isResetSuccess = ref(false)
+
+watchError(error)
 
 const token = computed(() => route.query.token as string)
 const emailParam = computed(() => route.query.email as string)
@@ -28,19 +34,14 @@ const form = useForm({
   onSubmit: async ({ value }) => {
     resetPassword(value, {
       onSuccess: () => {
+        isResetSuccess.value = true
+        showSuccessToast('Senha redefinida', 'Redirecionando para login...')
         setTimeout(() => {
           router.push('/auth/login')
         }, 2000)
       },
     })
   },
-})
-
-const errorMessage = computed(() => {
-  if (error.value) {
-    return 'Erro ao redefinir senha. O link pode ter expirado.'
-  }
-  return null
 })
 </script>
 
@@ -58,16 +59,6 @@ const errorMessage = computed(() => {
       <CardContent>
         <form @submit.prevent.stop="form.handleSubmit">
           <div class="flex flex-col gap-6">
-            <!-- Success Message -->
-            <div v-if="isSuccess" class="rounded-md bg-green-50 p-3 text-sm text-green-700">
-              Senha redefinida com sucesso! Redirecionando para login...
-            </div>
-
-            <!-- Error Message -->
-            <div v-if="errorMessage" class="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              {{ errorMessage }}
-            </div>
-
             <!-- Email Field (readonly) -->
             <form.Field name="email">
               <template #default="{ field }">
@@ -90,7 +81,7 @@ const errorMessage = computed(() => {
                   type="password"
                   label="Nova senha"
                   placeholder="Mínimo 6 caracteres"
-                  :disabled="isPending || isSuccess"
+                  :disabled="isPending || isResetSuccess"
                   :model-value="field.state.value"
                   :error="field.state.meta.errors[0]?.message"
                   @update:model-value="(val: unknown) => field.handleChange(val as string)"
@@ -107,7 +98,7 @@ const errorMessage = computed(() => {
                   type="password"
                   label="Confirmar nova senha"
                   placeholder="Digite a senha novamente"
-                  :disabled="isPending || isSuccess"
+                  :disabled="isPending || isResetSuccess"
                   :model-value="field.state.value"
                   :error="field.state.meta.errors[0]?.message"
                   @update:model-value="(val: unknown) => field.handleChange(val as string)"
@@ -118,7 +109,7 @@ const errorMessage = computed(() => {
 
             <!-- Submit Button -->
             <div class="flex flex-col gap-2">
-              <Button type="submit" :disabled="isPending || isSuccess">
+              <Button type="submit" :disabled="isPending || isResetSuccess">
                 {{ isPending ? 'Redefinindo...' : 'Redefinir senha' }}
               </Button>
               <p class="text-center text-sm text-muted-foreground">

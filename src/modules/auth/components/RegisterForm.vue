@@ -13,7 +13,7 @@ import { registerSchema, type RegisterInput } from '../schemas/auth.schema'
 
 const router = useRouter()
 const route = useRoute()
-const { showErrorToast } = useErrorHandler()
+const { showErrorToast, showSuccessToast, watchError } = useErrorHandler()
 
 const token = computed(() => route.query.token as string | undefined)
 
@@ -25,6 +25,8 @@ const {
 } = useValidateInvitation(token)
 
 const { mutate: register, isPending, error } = useRegister()
+
+watchError(error)
 
 // Redireciona se não tiver token ou se o token for inválido
 watchEffect(() => {
@@ -58,18 +60,12 @@ const form = useForm({
       },
       {
         onSuccess: () => {
+          showSuccessToast('Conta criada com sucesso!')
           router.push('/')
         },
       },
     )
   },
-})
-
-const errorMessage = computed(() => {
-  if (error.value) {
-    return 'Erro ao criar conta. O convite pode ter expirado ou já foi utilizado.'
-  }
-  return null
 })
 
 const isFormDisabled = computed(() => isPending.value || isValidating.value)
@@ -96,11 +92,6 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
       <CardContent>
         <form @submit.prevent.stop="form.handleSubmit">
           <div class="flex flex-col gap-6">
-            <!-- Error Message -->
-            <div v-if="errorMessage" class="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              {{ errorMessage }}
-            </div>
-
             <!-- Name Field -->
             <form.Field name="name">
               <template #default="{ field }">
