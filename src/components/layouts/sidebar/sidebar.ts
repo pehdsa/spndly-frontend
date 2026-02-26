@@ -1,5 +1,8 @@
 import {
+  CreditCard,
   LayoutDashboard,
+  Receipt,
+  Tag,
   Users,
   type LucideIcon,
 } from 'lucide-vue-next'
@@ -33,11 +36,26 @@ export const navigation: NavSection[] = [
         icon: LayoutDashboard,
         to: '/dashboard',
       },
+      {
+        title: 'Despesas',
+        icon: Receipt,
+        to: '/expenses',
+      },
     ],
   },
   {
     label: 'Gerenciamento',
     items: [
+      {
+        title: 'Categorias',
+        icon: Tag,
+        to: '/categories',
+      },
+      {
+        title: 'Métodos de Pagamento',
+        icon: CreditCard,
+        to: '/payment-methods',
+      },
       {
         title: 'Usuários',
         icon: Users,

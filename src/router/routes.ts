@@ -1,7 +1,10 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 import { authRoutes } from '@/modules/auth/router'
+import { categoriesRoutes } from '@/modules/categories'
 import { dashboardRoutes } from '@/modules/dashboard'
+import { expensesRoutes } from '@/modules/expenses'
+import { paymentMethodsRoutes } from '@/modules/payment-methods'
 import { usersRoutes } from '@/modules/users'
 
 // Rotas protegidas (layout auth)
@@ -17,6 +20,9 @@ const protectedRoutes: RouteRecordRaw = {
       redirect: { name: 'dashboard' },
     },
     dashboardRoutes,
+    expensesRoutes,
+    categoriesRoutes,
+    paymentMethodsRoutes,
     usersRoutes,
   ],
 }
