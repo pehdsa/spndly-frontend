@@ -1,0 +1,1 @@
+export { expensesRoutes } from './router'

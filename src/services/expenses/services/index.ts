@@ -1,0 +1,5 @@
+export { listExpenses } from './list-expenses'
+export { getExpense } from './get-expense'
+export { createExpense } from './create-expense'
+export { updateExpense } from './update-expense'
+export { deleteExpense } from './delete-expense'
