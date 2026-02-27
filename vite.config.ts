@@ -5,17 +5,19 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { fileURLToPath, URL } from 'node:url'
 
 // https://vite.dev/config/
+const proxyTarget = process.env.VITE_API_URL || 'https://spndly-backend.test'
+
 export default defineConfig({
   plugins: [vue(), tailwindcss(), tsconfigPaths()],
   server: {
     proxy: {
       '/api': {
-        target: 'https://spndly-backend.test',
+        target: proxyTarget,
         changeOrigin: true,
-        secure: false, // ignora certificado auto-assinado em domínios .test
+        secure: false,
       },
       '/oauth': {
-        target: 'https://spndly-backend.test',
+        target: proxyTarget,
         changeOrigin: true,
         secure: false,
       },
