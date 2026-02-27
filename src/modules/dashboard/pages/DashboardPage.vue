@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { Plus } from 'lucide-vue-next'
 import { AppPageHeader } from '@/components/shared/app-page-header'
+import { ExpenseDialog } from '@/components/shared/expense-dialog'
+import { Button } from '@/components/ui/button'
 import { useDashboard, type DashboardPeriod } from '@/services/dashboard'
 import DashboardFilters from './components/DashboardFilters.vue'
 import DashboardSummaryCards from './components/DashboardSummaryCards.vue'
@@ -8,6 +11,7 @@ import TopCategoriesChart from './components/TopCategoriesChart.vue'
 import TopPaymentMethodsChart from './components/TopPaymentMethodsChart.vue'
 import RecentExpensesList from './components/RecentExpensesList.vue'
 
+const createDialogOpen = ref(false)
 const period = ref<DashboardPeriod>('30d')
 const userId = ref<number | undefined>(undefined)
 
@@ -21,7 +25,14 @@ const { data, isLoading } = useDashboard({ params: dashboardParams })
 
 <template>
   <div class="flex flex-col gap-6">
-    <AppPageHeader title="Dashboard" subtitle="Visão geral das suas despesas" />
+    <AppPageHeader title="Dashboard" subtitle="Visão geral das suas despesas">
+      <template #actions>
+        <Button class="w-full md:w-auto" @click="createDialogOpen = true">
+          <Plus class="mr-2 h-4 w-4" />
+          Nova Despesa
+        </Button>
+      </template>
+    </AppPageHeader>
 
     <DashboardFilters v-model:period="period" v-model:user-id="userId" />
 
@@ -33,5 +44,7 @@ const { data, isLoading } = useDashboard({ params: dashboardParams })
     </div>
 
     <RecentExpensesList :expenses="data?.recent_expenses" :is-loading="isLoading" />
+
+    <ExpenseDialog v-model:open="createDialogOpen" />
   </div>
 </template>
