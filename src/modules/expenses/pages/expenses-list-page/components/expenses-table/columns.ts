@@ -41,7 +41,7 @@ export const columns: ColumnDef<Expense>[] = [
     header: ({ column }) => h(AppDataTableColumnHeader, { column, title: 'Data' }),
     cell: ({ row }) => {
       const date = new Date(row.getValue('created_at'))
-      return h('span', {}, date.toLocaleDateString('pt-BR'))
+      return h('span', {}, date.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }))
     },
   },
   {
