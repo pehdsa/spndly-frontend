@@ -13,7 +13,7 @@ import { toast } from 'vue-sonner'
 import type { AxiosError } from 'axios'
 import { useErrorHandler, type ErrorResponse } from '@/composables'
 import { useDeleteExpense, type Expense } from '@/services/expenses'
-import { ExpenseDialog } from '@/modules/expenses/components/expense-dialog'
+import { ExpenseDialog } from '@/components/shared/expense-dialog'
 
 interface Props {
   expense: Expense

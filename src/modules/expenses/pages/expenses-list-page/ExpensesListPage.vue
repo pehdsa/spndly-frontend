@@ -7,7 +7,7 @@ import { AppPageHeader } from '@/components/shared/app-page-header'
 import { useQueryParams } from '@/composables'
 import { useExpenses } from '@/services/expenses'
 import { ExpensesTable } from './components/expenses-table'
-import { ExpenseDialog } from '@/modules/expenses/components/expense-dialog'
+import { ExpenseDialog } from '@/components/shared/expense-dialog'
 
 const createDialogOpen = ref(false)
 
