@@ -207,3 +207,15 @@
   --info-border: #2d2d4a;
   --info-text: #60a5fa;
 }
+
+/* ==========================================================================
+   Unovis Charts
+   ========================================================================== */
+
+body {
+  --vis-axis-grid-color: var(--border);
+  --vis-axis-tick-label-color: var(--muted-foreground);
+  --vis-tooltip-background-color: transparent;
+  --vis-tooltip-border-color: transparent;
+  --vis-tooltip-padding: 0;
+}
