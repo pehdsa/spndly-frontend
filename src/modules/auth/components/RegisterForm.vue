@@ -44,6 +44,7 @@ watchEffect(() => {
 const form = useForm({
   defaultValues: {
     name: '',
+    phone_number: '',
     password: '',
     password_confirmation: '',
   } as RegisterInput,
@@ -57,6 +58,7 @@ const form = useForm({
       {
         token: token.value,
         ...value,
+        phone_number: value.phone_number.replace(/\D/g, ''),
       },
       {
         onSuccess: () => {
@@ -100,6 +102,23 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
                   type="text"
                   label="Nome completo"
                   placeholder="Seu nome"
+                  :disabled="isFormDisabled"
+                  :model-value="field.state.value"
+                  :error="field.state.meta.errors[0]?.message"
+                  @update:model-value="(val: unknown) => field.handleChange(val as string)"
+                  @blur="field.handleBlur"
+                />
+              </template>
+            </form.Field>
+
+            <!-- Phone Number Field -->
+            <form.Field name="phone_number">
+              <template #default="{ field }">
+                <AppFormInput
+                  id="phone_number"
+                  label="Telefone Celular"
+                  placeholder="(00) 00000-0000"
+                  mask="phone"
                   :disabled="isFormDisabled"
                   :model-value="field.state.value"
                   :error="field.state.meta.errors[0]?.message"

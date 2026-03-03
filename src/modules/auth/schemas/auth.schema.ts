@@ -15,6 +15,16 @@ export const registerSchema = z.object({
     .string()
     .min(3, 'Nome deve ter no mínimo 3 caracteres')
     .max(255, 'Nome deve ter no máximo 255 caracteres'),
+  phone_number: z
+    .string()
+    .min(1, 'Telefone celular é obrigatório')
+    .refine(
+      (val) => {
+        const digits = val.replace(/\D/g, '')
+        return digits.length === 11 && digits[2] === '9'
+      },
+      'Telefone celular inválido',
+    ),
   password: z
     .string()
     .min(8, 'Senha deve ter no mínimo 8 caracteres')
