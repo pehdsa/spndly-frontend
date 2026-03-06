@@ -6,6 +6,7 @@ import { dashboardRoutes } from '@/modules/dashboard'
 import { expensesRoutes } from '@/modules/expenses'
 import { paymentMethodsRoutes } from '@/modules/payment-methods'
 import { usersRoutes } from '@/modules/users'
+// [MODULE-IMPORTS]
 
 // Rotas protegidas (layout auth)
 const protectedRoutes: RouteRecordRaw = {
@@ -24,6 +25,7 @@ const protectedRoutes: RouteRecordRaw = {
     categoriesRoutes,
     paymentMethodsRoutes,
     usersRoutes,
+    // [MODULE-ROUTES]
   ],
 }
 
