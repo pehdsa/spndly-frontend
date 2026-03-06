@@ -4,6 +4,7 @@ import { VisXYContainer, VisStackedBar, VisStackedBarSelectors, VisAxis, VisTool
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { TopCategory } from '@/services/dashboard'
+import { CHART_COLORS } from '@/lib/colors'
 
 interface Props {
   data?: TopCategory[]
@@ -13,8 +14,6 @@ interface Props {
 const props = defineProps<Props>()
 
 const chartData = computed(() => props.data ?? [])
-
-const CHART_COLORS = ['#4D8CFD', '#FF6B7E', '#F4B83E', '#A6CC74', '#00C19A', '#6859BE']
 
 function formatCurrency(cents: number): string {
   return (cents / 100).toLocaleString('pt-BR', {
