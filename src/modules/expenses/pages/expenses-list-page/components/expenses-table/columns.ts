@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 import { h } from 'vue'
 import { AppDataTableColumnHeader, AppTableCell } from '@/components/shared/app-datatable'
+import { ColorBadge } from '@/components/shared/color-badge'
 import type { Expense } from '@/services/expenses'
 import ExpenseActions from './ExpenseActions.vue'
 
@@ -28,13 +29,15 @@ export const columns: ColumnDef<Expense>[] = [
     id: 'category',
     header: 'Categoria',
     enableSorting: false,
-    cell: ({ row }) => h(AppTableCell, { value: row.original.category.name }),
+    cell: ({ row }) =>
+      h(ColorBadge, { label: row.original.category.name, colorId: row.original.category.id }),
   },
   {
     id: 'payment_method',
     header: 'Método de Pagamento',
     enableSorting: false,
-    cell: ({ row }) => h(AppTableCell, { value: row.original.payment_method.name }),
+    cell: ({ row }) =>
+      h(ColorBadge, { label: row.original.payment_method.name, colorId: row.original.payment_method.id }),
   },
   {
     accessorKey: 'created_at',
