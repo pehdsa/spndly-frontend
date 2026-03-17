@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AppFormInput } from '@/components/shared/app-form-input'
 import { useRegister } from '@/services/auth'
 import { useValidateInvitation } from '@/services/users'
+import { formatBrPhone } from '@/lib/phone'
 import { registerSchema, type RegisterInput } from '../schemas/auth.schema'
 
 const router = useRouter()
@@ -44,6 +45,7 @@ watchEffect(() => {
 const form = useForm({
   defaultValues: {
     name: '',
+    email: '',
     phone_number: '',
     password: '',
     password_confirmation: '',
@@ -88,7 +90,7 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
           Criar conta
         </CardTitle>
         <CardDescription>
-          Complete seu cadastro para <strong>{{ validationData.email }}</strong>
+          Complete seu cadastro para <strong>{{ formatBrPhone(validationData.phone_number) }}</strong>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -102,6 +104,23 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
                   type="text"
                   label="Nome completo"
                   placeholder="Seu nome"
+                  :disabled="isFormDisabled"
+                  :model-value="field.state.value"
+                  :error="field.state.meta.errors[0]?.message"
+                  @update:model-value="(val: unknown) => field.handleChange(val as string)"
+                  @blur="field.handleBlur"
+                />
+              </template>
+            </form.Field>
+
+            <!-- Email Field -->
+            <form.Field name="email">
+              <template #default="{ field }">
+                <AppFormInput
+                  id="email"
+                  type="email"
+                  label="Email"
+                  placeholder="seu@email.com"
                   :disabled="isFormDisabled"
                   :model-value="field.state.value"
                   :error="field.state.meta.errors[0]?.message"

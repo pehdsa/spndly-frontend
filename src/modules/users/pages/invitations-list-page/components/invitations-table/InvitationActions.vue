@@ -14,6 +14,7 @@ import type { AxiosError } from 'axios'
 import { useErrorHandler, type ErrorResponse } from '@/composables'
 import type { Invitation } from '@/services/users'
 import { useDeleteInvitation } from '@/services/users'
+import { formatBrPhone } from '@/lib/phone'
 
 interface Props {
   invitation: Invitation
@@ -102,6 +103,6 @@ function handleDelete() {
     @confirm="handleDelete"
   >
     Esta ação não pode ser desfeita. O convite para
-    <strong>{{ invitation.email }}</strong> será removido permanentemente.
+    <strong>{{ formatBrPhone(invitation.phone_number) }}</strong> será removido permanentemente.
   </AppConfirmDialog>
 </template>
