@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/tags-input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+import { isValidBrCellphone, normalizePhoneDigits, formatBrPhone } from '@/lib/phone'
 
 interface Props {
   id: string
@@ -17,6 +18,7 @@ interface Props {
   placeholder?: string | null
   error?: string | null
   disabled?: boolean
+  mode?: 'email' | 'phone' | 'text'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -24,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: 'Digite e pressione Enter',
   error: null,
   disabled: false,
+  mode: 'email',
 })
 
 const emit = defineEmits<{
@@ -37,39 +40,76 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
+function showLocalError(message: string) {
+  localError.value = message
+  setTimeout(() => {
+    localError.value = null
+  }, 3000)
+}
+
+function validateAndNormalize(raw: string): { valid: boolean; normalized: string } {
+  if (props.mode === 'phone') {
+    const digits = normalizePhoneDigits(raw)
+    if (!isValidBrCellphone(digits)) {
+      showLocalError('Telefone inválido')
+      return { valid: false, normalized: '' }
+    }
+    return { valid: true, normalized: digits }
+  }
+
+  if (props.mode === 'email') {
+    const normalized = raw.trim().toLowerCase()
+    if (!isValidEmail(normalized)) {
+      showLocalError('Email inválido')
+      return { valid: false, normalized: '' }
+    }
+    return { valid: true, normalized }
+  }
+
+  // mode === 'text'
+  const trimmed = raw.trim()
+  if (!trimmed) return { valid: false, normalized: '' }
+  return { valid: true, normalized: trimmed }
+}
+
+function isDuplicate(normalized: string): boolean {
+  if (props.mode === 'phone') {
+    return modelValue.value.some((v) => normalizePhoneDigits(v) === normalized)
+  }
+  if (props.mode === 'email') {
+    return modelValue.value.some((v) => v.toLowerCase() === normalized)
+  }
+  return modelValue.value.includes(normalized)
+}
+
+function getDuplicateMessage(): string {
+  if (props.mode === 'phone') return 'Telefone já adicionado'
+  if (props.mode === 'email') return 'Email já adicionado'
+  return 'Item já adicionado'
+}
+
+function formatForDisplay(value: string): string {
+  if (props.mode === 'phone') return formatBrPhone(value)
+  return value
+}
+
 function handleUpdateModelValue(newValue: AcceptableInputValue[]) {
   const stringValues = newValue.map(String)
 
-  // Verifica se houve adição de novo valor
   if (stringValues.length > modelValue.value.length) {
-    const addedEmail = stringValues[stringValues.length - 1]
-    if (!addedEmail) return
+    const addedValue = stringValues[stringValues.length - 1]
+    if (!addedValue) return
 
-    const normalizedEmail = addedEmail.trim().toLowerCase()
+    const { valid, normalized } = validateAndNormalize(addedValue)
+    if (!valid) return
 
-    // Valida email
-    if (!isValidEmail(normalizedEmail)) {
-      localError.value = 'Email inválido'
-      setTimeout(() => {
-        localError.value = null
-      }, 3000)
-      return // Não atualiza o model
+    if (isDuplicate(normalized)) {
+      showLocalError(getDuplicateMessage())
+      return
     }
 
-    // Verifica duplicado (com normalização)
-    const existingEmails = modelValue.value.map((e) => e.toLowerCase())
-    if (existingEmails.includes(normalizedEmail)) {
-      localError.value = 'Email já adicionado'
-      setTimeout(() => {
-        localError.value = null
-      }, 3000)
-      return // Não atualiza o model
-    }
-
-    // Atualiza com email normalizado
-    modelValue.value = [...modelValue.value, normalizedEmail]
+    modelValue.value = [...modelValue.value, normalized]
   } else {
-    // Remoção de tag - apenas atualiza
     modelValue.value = stringValues
   }
 }
@@ -99,7 +139,7 @@ const displayError = computed(() => props.error || localError.value)
       @update:model-value="handleUpdateModelValue"
     >
       <TagsInputItem v-for="item in modelValue" :key="item" :value="item">
-        <TagsInputItemText />
+        <TagsInputItemText>{{ formatForDisplay(item) }}</TagsInputItemText>
         <TagsInputItemDelete />
       </TagsInputItem>
 
