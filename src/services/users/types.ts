@@ -18,7 +18,7 @@ export interface User {
 
 export interface Invitation {
   id: number
-  email: string
+  phone_number: string
   token: string
   role: UserRole
   status: InvitationStatus
@@ -29,24 +29,19 @@ export interface Invitation {
 }
 
 // DTOs
-export interface CreateInvitationData {
-  email: string
-  role: string
-}
-
 export interface UpdateUserRoleData {
   role: UserRole
 }
 
 // DTOs para criação em lote
 export interface CreateBulkInvitationData {
-  emails: string[]
+  phone_numbers: string[]
   role: string
 }
 
 // Resposta de criação em lote
 export interface BulkInvitationFailed {
-  email: string
+  phone_number: string
   reason: string
 }
 

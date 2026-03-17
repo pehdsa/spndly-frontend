@@ -2,13 +2,14 @@
 import { computed, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Loader2 } from 'lucide-vue-next'
-import { useForm } from '@/composables/useForm'
+import { useForm, getFieldError } from '@/composables/useForm'
 import { useErrorHandler } from '@/composables'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AppFormInput } from '@/components/shared/app-form-input'
 import { useRegister } from '@/services/auth'
 import { useValidateInvitation } from '@/services/users'
+import { formatBrPhone } from '@/lib/phone'
 import { registerSchema, type RegisterInput } from '../schemas/auth.schema'
 
 const router = useRouter()
@@ -44,7 +45,7 @@ watchEffect(() => {
 const form = useForm({
   defaultValues: {
     name: '',
-    phone_number: '',
+    email: '',
     password: '',
     password_confirmation: '',
   } as RegisterInput,
@@ -58,7 +59,7 @@ const form = useForm({
       {
         token: token.value,
         ...value,
-        phone_number: value.phone_number.replace(/\D/g, ''),
+        phone_number: validationData.value!.phone_number,
       },
       {
         onSuccess: () => {
@@ -88,7 +89,7 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
           Criar conta
         </CardTitle>
         <CardDescription>
-          Complete seu cadastro para <strong>{{ validationData.email }}</strong>
+          Complete seu cadastro para<br /><strong>{{ formatBrPhone(validationData.phone_number) }}</strong>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -111,14 +112,14 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
               </template>
             </form.Field>
 
-            <!-- Phone Number Field -->
-            <form.Field name="phone_number">
+            <!-- Email Field -->
+            <form.Field name="email">
               <template #default="{ field }">
                 <AppFormInput
-                  id="phone_number"
-                  label="Telefone Celular"
-                  placeholder="(00) 00000-0000"
-                  mask="phone"
+                  id="email"
+                  type="email"
+                  label="Email"
+                  placeholder="seu@email.com"
                   :disabled="isFormDisabled"
                   :model-value="field.state.value"
                   :error="field.state.meta.errors[0]?.message"
@@ -135,7 +136,7 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
                   id="password"
                   type="password"
                   label="Senha"
-                  placeholder="Mínimo 6 caracteres"
+                  placeholder="Mínimo 8 caracteres"
                   :disabled="isFormDisabled"
                   :model-value="field.state.value"
                   :error="field.state.meta.errors[0]?.message"
@@ -146,7 +147,17 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
             </form.Field>
 
             <!-- Password Confirmation Field -->
-            <form.Field name="password_confirmation">
+            <form.Field
+              name="password_confirmation"
+              :validators="{
+                onSubmit: ({ value, fieldApi }) => {
+                  if (value !== fieldApi.form.getFieldValue('password')) {
+                    return 'As senhas não coincidem'
+                  }
+                  return undefined
+                },
+              }"
+            >
               <template #default="{ field }">
                 <AppFormInput
                   id="password_confirmation"
@@ -155,7 +166,7 @@ const isFormDisabled = computed(() => isPending.value || isValidating.value)
                   placeholder="Digite a senha novamente"
                   :disabled="isFormDisabled"
                   :model-value="field.state.value"
-                  :error="field.state.meta.errors[0]?.message"
+                  :error="getFieldError(field)"
                   @update:model-value="(val: unknown) => field.handleChange(val as string)"
                   @blur="field.handleBlur"
                 />

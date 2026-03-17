@@ -74,7 +74,7 @@ function handleStatusChange(value: unknown) {
           </InputGroupAddon>
           <InputGroupInput
             v-model="searchInputValue"
-            placeholder="Buscar por email"
+            placeholder="Buscar por telefone"
             @blur="handleSearch"
             @keyup.enter="handleSearch"
           />

@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { AppTagsInput } from '@/components/shared/app-tags-input'
 import { cn } from '@/lib/utils'
+import { formatBrPhone, normalizePhoneDigits } from '@/lib/phone'
 import { toast } from 'vue-sonner'
 import type { AxiosError } from 'axios'
 import { useForm, useErrorHandler, type ErrorResponse } from '@/composables'
@@ -36,10 +37,10 @@ const open = defineModel<boolean>('open', { default: false })
 const { mutate: createInvitation, isPending } = useCreateInvitation()
 const { handleError } = useErrorHandler()
 
-function formatFailedEmails(failed: BulkInvitationResponse['failed']): string {
+function formatFailedPhones(failed: BulkInvitationResponse['failed']): string {
   const maxErrors = 10
   const displayedErrors = failed.slice(0, maxErrors)
-  const lines = displayedErrors.map((f) => `${f.email} - ${f.reason}`)
+  const lines = displayedErrors.map((f) => `${formatBrPhone(f.phone_number)} - ${f.reason}`)
 
   if (failed.length > maxErrors) {
     lines.push(`... e mais ${failed.length - maxErrors} erro(s)`)
@@ -86,7 +87,7 @@ function handleBulkResponse(response: BulkInvitationResponse) {
 
   if (sent.length === 0) {
     toast.error('Falha ao enviar convites', {
-      description: formatFailedEmails(failed),
+      description: formatFailedPhones(failed),
       duration: 8000,
     })
     return
@@ -95,8 +96,8 @@ function handleBulkResponse(response: BulkInvitationResponse) {
   open.value = false
   form.reset()
   toast.success(`${sent.length} convite(s) enviado(s)`)
-  toast.warning('Alguns emails falharam', {
-    description: formatFailedEmails(failed),
+  toast.warning('Alguns telefones falharam', {
+    description: formatFailedPhones(failed),
     duration: 8000,
   })
 }
@@ -110,17 +111,23 @@ function onMutationError(error: Error) {
 
 const form = useForm({
   defaultValues: {
-    emails: [] as string[],
+    phone_numbers: [] as string[],
     role: undefined as unknown as UserRole,
   } as InvitationInput,
   validators: {
     onSubmit: invitationSchema,
   },
   onSubmit: async ({ value }) => {
-    createInvitation({ emails: value.emails, role: value.role }, {
-      onSuccess: handleBulkResponse,
-      onError: onMutationError,
-    })
+    createInvitation(
+      {
+        phone_numbers: value.phone_numbers.map(normalizePhoneDigits),
+        role: value.role,
+      },
+      {
+        onSuccess: handleBulkResponse,
+        onError: onMutationError,
+      },
+    )
   },
 })
 
@@ -137,18 +144,19 @@ watch(open, (isOpen) => {
       <DialogHeader>
         <DialogTitle>Convidar usuários</DialogTitle>
         <DialogDescription>
-          Envie convites por email para novos usuários.
+          Envie convites por telefone para novos usuários.
         </DialogDescription>
       </DialogHeader>
 
       <form @submit.prevent.stop="form.handleSubmit">
         <div class="flex flex-col gap-4 pb-4">
-          <form.Field name="emails">
+          <form.Field name="phone_numbers">
             <template #default="{ field }">
               <AppTagsInput
-                id="invitation-emails"
-                label="Emails *"
-                placeholder="Digite um email e pressione Enter"
+                id="invitation-phones"
+                label="Telefones *"
+                placeholder="Digite um telefone e pressione Enter"
+                mode="phone"
                 :disabled="isPending"
                 :model-value="field.state.value"
                 :error="field.state.meta.errors[0]?.message"

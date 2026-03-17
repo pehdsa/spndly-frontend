@@ -19,6 +19,7 @@ export interface LoginCredentials {
 export interface RegisterData {
   token: string
   name: string
+  email: string
   phone_number: string
   password: string
   password_confirmation: string

@@ -4,13 +4,14 @@ import { Badge } from '@/components/ui/badge'
 import { AppDataTableColumnHeader, AppTableCell } from '@/components/shared/app-datatable'
 import type { Invitation, UserRole } from '@/services/users'
 import { USER_ROLE_LABELS } from '@/modules/users/constants'
+import { formatBrPhone } from '@/lib/phone'
 import InvitationActions from './InvitationActions.vue'
 
 export const columns: ColumnDef<Invitation>[] = [
   {
-    accessorKey: 'email',
-    header: ({ column }) => h(AppDataTableColumnHeader, { column, title: 'Email' }),
-    cell: ({ row }) => h(AppTableCell, { value: row.original.email, class: 'font-medium' }),
+    accessorKey: 'phone_number',
+    header: ({ column }) => h(AppDataTableColumnHeader, { column, title: 'Telefone' }),
+    cell: ({ row }) => h(AppTableCell, { value: formatBrPhone(row.original.phone_number), class: 'font-medium' }),
   },
   {
     accessorKey: 'role',

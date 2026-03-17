@@ -1,8 +1,6 @@
 // Re-export TanStack Form
 export { useForm } from '@tanstack/vue-form'
 
-type StandardSchemaError = { message: string } | string
-
 /**
  * Helper para verificar se um campo está inválido
  */
@@ -14,8 +12,10 @@ export function isFieldInvalid(field: { state: { meta: { isTouched: boolean; err
  * Helper para obter a primeira mensagem de erro de um campo
  * Suporta tanto strings quanto objetos de erro do Standard Schema (Zod v4)
  */
-export function getFieldError(field: { state: { meta: { errors: StandardSchemaError[] } } }): string | null {
+export function getFieldError(field: { state: { meta: { errors: unknown[] } } }): string | null {
   const error = field.state.meta.errors[0]
   if (!error) return null
-  return typeof error === 'string' ? error : error.message
+  if (typeof error === 'string') return error
+  if (typeof error === 'object' && error !== null && 'message' in error) return (error as { message: string }).message
+  return null
 }

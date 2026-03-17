@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useForm } from '@/composables/useForm'
+import { useForm, getFieldError } from '@/composables/useForm'
 import { useErrorHandler } from '@/composables'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -80,7 +80,7 @@ const form = useForm({
                   id="password"
                   type="password"
                   label="Nova senha"
-                  placeholder="Mínimo 6 caracteres"
+                  placeholder="Mínimo 8 caracteres"
                   :disabled="isPending || isResetSuccess"
                   :model-value="field.state.value"
                   :error="field.state.meta.errors[0]?.message"
@@ -91,7 +91,17 @@ const form = useForm({
             </form.Field>
 
             <!-- Password Confirmation Field -->
-            <form.Field name="password_confirmation">
+            <form.Field
+              name="password_confirmation"
+              :validators="{
+                onSubmit: ({ value, fieldApi }) => {
+                  if (value !== fieldApi.form.getFieldValue('password')) {
+                    return 'As senhas não coincidem'
+                  }
+                  return undefined
+                },
+              }"
+            >
               <template #default="{ field }">
                 <AppFormInput
                   id="password_confirmation"
@@ -100,7 +110,7 @@ const form = useForm({
                   placeholder="Digite a senha novamente"
                   :disabled="isPending || isResetSuccess"
                   :model-value="field.state.value"
-                  :error="field.state.meta.errors[0]?.message"
+                  :error="getFieldError(field)"
                   @update:model-value="(val: unknown) => field.handleChange(val as string)"
                   @blur="field.handleBlur"
                 />
