@@ -5,7 +5,6 @@ export type {
   UserRole,
   Invitation,
   InvitationStatus,
-  CreateInvitationData,
   UpdateUserRoleData,
   CreateBulkInvitationData,
   BulkInvitationFailed,
