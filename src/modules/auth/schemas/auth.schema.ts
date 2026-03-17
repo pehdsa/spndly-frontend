@@ -19,16 +19,6 @@ export const registerSchema = z.object({
     .string()
     .min(1, 'Email é obrigatório')
     .email('Email inválido'),
-  phone_number: z
-    .string()
-    .min(1, 'Telefone celular é obrigatório')
-    .refine(
-      (val) => {
-        const digits = val.replace(/\D/g, '')
-        return digits.length === 11 && digits[2] === '9'
-      },
-      'Telefone celular inválido',
-    ),
   password: z
     .string()
     .min(8, 'Senha deve ter no mínimo 8 caracteres')
@@ -36,9 +26,6 @@ export const registerSchema = z.object({
   password_confirmation: z
     .string()
     .min(8, 'Confirmação de senha deve ter no mínimo 8 caracteres'),
-}).refine((data) => data.password === data.password_confirmation, {
-  message: 'As senhas não coincidem',
-  path: ['password_confirmation'],
 })
 
 export const forgotPasswordSchema = z.object({
@@ -63,9 +50,6 @@ export const resetPasswordSchema = z.object({
   password_confirmation: z
     .string()
     .min(8, 'Confirmação de senha deve ter no mínimo 8 caracteres'),
-}).refine((data) => data.password === data.password_confirmation, {
-  message: 'As senhas não coincidem',
-  path: ['password_confirmation'],
 })
 
 export type LoginInput = z.infer<typeof loginSchema>
